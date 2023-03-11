@@ -27,7 +27,7 @@ yarn start
 After the applicaition has successfully start, chose the data file(***S&P500_2YearData.csv***) and submit.
 
 ### Output
-[ohlc]
+![ohlc]
 
 <!-- Images -->
 [ohlc]: images/ohlc.png
