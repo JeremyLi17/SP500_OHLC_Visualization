@@ -103,7 +103,6 @@ function App() {
     animation: false,
     title: {
       text: 'S&P 500 Index',
-
       subtext: '2021.3. - 2023.3',
       left: 'center',
     },
