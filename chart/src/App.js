@@ -249,15 +249,16 @@ function App() {
       },
       {
         type: 'category',
-        gridIndex: 1,
         data: dateArray,
+        gridIndex: 1,
         boundaryGap: false,
         axisLine: { onZero: false },
-        axisTick: { show: false },
         splitLine: { show: false },
-        axisLabel: { show: false },
         min: 'dataMin',
         max: 'dataMax',
+        axisPointer: {
+          z: 100,
+        },
       },
     ],
     yAxis: [
