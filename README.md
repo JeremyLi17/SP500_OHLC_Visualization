@@ -27,7 +27,12 @@ yarn start
 After the applicaition has successfully start, chose the data file(***S&P500_2YearData.csv***) and submit.
 
 ### Output
-![ohlc]
+* Version 1, the candleStick chart:
+![candleStick]
+
+* Version 2, combine two chart into same page:
+![ohlcAndCandle]
 
 <!-- Images -->
-[ohlc]: images/ohlc.png
+[candleStick]: images/candleStick.png
+[ohlcAndCandle]: images/ohlc%26candlestick.png

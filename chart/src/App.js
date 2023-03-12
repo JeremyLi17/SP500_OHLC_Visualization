@@ -27,7 +27,7 @@ const Button = styled.button`
   display: flex;
 `;
 
-const ChartBlock = styled.div`
+const ChartContainer = styled.div`
   width: 100%;
 `;
 
@@ -99,6 +99,55 @@ function App() {
     setMA200Array(ma200);
   };
 
+  // OHLC style
+  function renderItem(params, api) {
+    var xValue = api.value(0);
+    var openPoint = api.coord([xValue, api.value(1)]);
+    var closePoint = api.coord([xValue, api.value(2)]);
+    var lowPoint = api.coord([xValue, api.value(3)]);
+    var highPoint = api.coord([xValue, api.value(4)]);
+    var halfWidth = api.size([1, 0])[0] * 0.35;
+    var style = api.style({
+      // stroke: api.visual('color'),
+      stroke: '#2c2c2c',
+    });
+    return {
+      type: 'group',
+      children: [
+        {
+          type: 'line',
+          shape: {
+            x1: lowPoint[0],
+            y1: lowPoint[1],
+            x2: highPoint[0],
+            y2: highPoint[1],
+          },
+          style: style,
+        },
+        {
+          type: 'line',
+          shape: {
+            x1: openPoint[0],
+            y1: openPoint[1],
+            x2: openPoint[0] - halfWidth,
+            y2: openPoint[1],
+          },
+          style: style,
+        },
+        {
+          type: 'line',
+          shape: {
+            x1: closePoint[0],
+            y1: closePoint[1],
+            x2: closePoint[0] + halfWidth,
+            y2: closePoint[1],
+          },
+          style: style,
+        },
+      ],
+    };
+  }
+
   const option = {
     animation: false,
     title: {
@@ -109,7 +158,7 @@ function App() {
     legend: {
       bottom: 10,
       left: 'center',
-      data: ['S&P500 Index', 'MA50', 'MA200'],
+      data: ['S&P500 Candlestick', 'MA50', 'MA200', 'S&P500 OHLC'],
     },
     tooltip: {
       trigger: 'axis',
@@ -176,14 +225,14 @@ function App() {
       {
         left: '10%',
         right: '8%',
-        height: '65%',
+        height: '40%',
       },
-      // {
-      //   left: '10%',
-      //   right: '8%',
-      //   top: '63%',
-      //   height: '16%',
-      // },
+      {
+        left: '10%',
+        right: '8%',
+        top: '50%',
+        height: '40%',
+      },
     ],
     xAxis: [
       {
@@ -198,22 +247,29 @@ function App() {
           z: 100,
         },
       },
-      // {
-      //   type: 'category',
-      //   gridIndex: 1,
-      //   data: dateArray,
-      //   boundaryGap: false,
-      //   axisLine: { onZero: false },
-      //   axisTick: { show: false },
-      //   splitLine: { show: false },
-      //   axisLabel: { show: false },
-      //   min: 'dataMin',
-      //   max: 'dataMax',
-      // },
+      {
+        type: 'category',
+        gridIndex: 1,
+        data: dateArray,
+        boundaryGap: false,
+        axisLine: { onZero: false },
+        axisTick: { show: false },
+        splitLine: { show: false },
+        axisLabel: { show: false },
+        min: 'dataMin',
+        max: 'dataMax',
+      },
     ],
     yAxis: [
       {
         scale: true,
+        splitArea: {
+          show: true,
+        },
+      },
+      {
+        scale: true,
+        gridIndex: 1,
         splitArea: {
           show: true,
         },
@@ -239,14 +295,14 @@ function App() {
         show: true,
         xAxisIndex: [0, 1],
         type: 'slider',
-        top: '80%',
+        top: '93%',
         start: 98,
         end: 100,
       },
     ],
     series: [
       {
-        name: 'S&P500 Index',
+        name: 'S&P500 Candlestick',
         type: 'candlestick',
         data: ohlcArray,
         itemStyle: {
@@ -273,6 +329,22 @@ function App() {
         lineStyle: {
           opacity: 0.5,
         },
+      },
+      {
+        name: 'S&P500 OHLC',
+        type: 'custom',
+        xAxisIndex: 1,
+        yAxisIndex: 1,
+        renderItem: renderItem,
+        dimensions: ['-', 'open', 'close', 'lowest', 'highest'],
+        encode: {
+          x: 0,
+          y: [1, 2, 3, 4],
+          tooltip: [1, 2, 3, 4],
+        },
+        data: ohlcArray.map((e, i) => {
+          return [i, ...e];
+        }),
       },
     ],
   };
@@ -304,7 +376,7 @@ function App() {
           </Button>
         </UploadContainer>
       </UploadWrapper>
-      <ChartBlock>
+      <ChartContainer>
         {dateArray.length !== 0 ? (
           <ReactECharts
             option={option}
@@ -314,7 +386,7 @@ function App() {
         ) : (
           <Info>Please upload data file first</Info>
         )}
-      </ChartBlock>
+      </ChartContainer>
     </Wrapper>
   );
 }
